@@ -1,6 +1,12 @@
+library(ggplot2)
+library(ggrepel)
+library(tidyverse)
+library(ggsci)
+
 
 # Raw Data INPUT
 df <- read.csv('D:/Github/KPMG-Contest/Tables/Raw_wzry.csv')
+df <- read.csv('D:/Github/KPMG-Contest/Tables/Raw_lol.csv')
 
 colnames(df) <- c('age', 'value')
 
@@ -8,10 +14,11 @@ i = 22
 
 fi = 0
 
-var_1 = 0.01
+var_1 = 0.0065
 # var_2 = 0.1001
 
-mean_age = c(17, 25, 35, 45, 55)
+# mean_age = c(17, 25, 35, 45, 55)
+mean_age = c(17, 23, 31, 42, 60)
 const = 500
 
 sqrtpi = sqrt(2 * 3.14159)
@@ -46,8 +53,6 @@ for (v in c(1:12)){
   vect[v] = 0
 }
 
-median_age  = c(17, 23, 31, 42, 60)
-
 
 for (i in c(5:55)){
   fi = 0
@@ -56,11 +61,11 @@ for (i in c(5:55)){
     data <- df$value[ind]
     # data <- 1
     # print(data)
-    diff = (i - median_age[ind]) / const
+    diff = (i - mean_age[ind]) / const
     # beta = i^0.2
     beta = 1
     add = (beta * e^( - (diff^2)/ (2 * (var_1^2) ) ) )/ (var_1 * sqrtpi) * data
-    substract = (e^( - (diff^2)/ (2 * (var_2^2) ) ) )/ (var_2 * sqrtpi) * data
+    # substract = (e^( - (diff^2)/ (2 * (var_2^2) ) ) )/ (var_2 * sqrtpi) * data
     substract = 0
     fi = fi + add - substract
     # print(diff)
@@ -75,15 +80,15 @@ expceted_data <- data.frame(age = c(1:55),
                             val = vect
 )
 
-raw_data <- data.frame(age = mean_age, 
+median_age  = c(17, 25, 35, 45, 55)
+
+raw_data <- data.frame(age = median_age, 
                        val = df$value)
 
 # Compare raw
 
 unnormalized <- c(0,0,0,0,0)
 
-
-median_age  = c(17, 25, 35, 45, 55)
 
 for (k in c(1:4)){
   start = median_age[k]
@@ -98,7 +103,7 @@ unnormalized[1] = sum(vect[1:17])
 print(unnormalized)
 
 
-unnormalized_data <- data.frame(age = mean_age,
+unnormalized_data <- data.frame(age = median_age,
                                 val = unnormalized
 )
 
@@ -111,7 +116,7 @@ for (i in c(1:5)){
 }
 
 
-normalized_data <- data.frame(age = mean_age,
+normalized_data <- data.frame(age = median_age,
                               val = normalized
 )
 print(normalized)

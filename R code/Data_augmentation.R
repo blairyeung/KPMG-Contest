@@ -1,4 +1,5 @@
 df <- read.csv('D:/Github/KPMG-Contest/Tables/Raw_wzry.csv')
+df <- read.csv('D:/Github/KPMG-Contest/Tables/Raw_lol.csv')
 
 colnames(df) <- c('age', 'value')
 
