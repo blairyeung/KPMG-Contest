@@ -16,7 +16,7 @@ game_name = c(1: 5 * num_games)
 variance_vect = c(0.009, 0.0065, 0.0072)
 
 
-for (f in c(1:3)){
+for (f in c(1:num_games)){
   # (paths[f])
   df <- read.csv(paths[f])
   # print(df)
