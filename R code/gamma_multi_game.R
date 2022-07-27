@@ -38,15 +38,20 @@ games = c(MOBA_games, ARPG_games)
 final_expected = c(1: 5 * num_total)
 final_actual = c(1: 5 * num_total)
 game_name = c(1: 5 * num_total)
+game_name_full = c(1: 60 * num_total)
 # Raw Data INPUT
 
-variance_vect = c(0.009, 0.0065, 0.0072)
+# variance_vect = c(0.008, 0.008, 0.008)
+variance_vect = c(0.01, 0.01, 0.01)
+variance_vect_2 = c(0.8,0.8,0.8)
 
 print(Game_abb)
 game_abb <- Game_abb[15]
 print(game_abb)
 
 for (w in 1:num_types){
+  
+  # Initialize paths
   vec_start <- w
   vec_mid <- w + 5
   vec_end <- w + 10
@@ -58,19 +63,20 @@ for (w in 1:num_types){
   for (i in 1:num_games){
     paths[i] = paste(sup_path ,game_abb[i],sub_path, sep = '')
   }
+  
+  # Main loop
   for (f in c(1:num_games)){
-    # (paths[f])
+    
     path <- paths[f]
-    # print(path)
+    # read file
     df <- read.csv(path)
-    # print(df)
     colnames(df) <- c('age', 'value')
     
     
     fi = 0
     
     var_1 = variance_vect[f]
-    # var_2 = 0.1001
+    var_2 = variance_vect_2[f]
     
     # mean_age = c(17, 25, 35, 45, 55)
     mean_age = c(18, 21, 31, 42, 60)
@@ -98,8 +104,8 @@ for (w in 1:num_types){
         # beta = i^0.2
         beta = 1
         add = (beta * e^( - (diff^2)/ (2 * (var_1^2) ) ) )/ (var_1 * sqrtpi) * data
-        # substract = (e^( - (diff^2)/ (2 * (var_2^2) ) ) )/ (var_2 * sqrtpi) * data
-        substract = 0
+        substract = (beta * e^( - (diff^2)/ (2 * (var_2^2) ) ) )/ (var_2 * sqrtpi) * data
+        # substract = 0
         fi = fi + add - substract
         # print(diff)
         # print(add)
@@ -163,19 +169,52 @@ for (w in 1:num_types){
       game_name[5 * (f-1) + v] <- games[f]
     }
     
+    game_name_full = c(1:55)
+    for(v in c(1:55)){
+      game_name_full[v] <- games[f]
+    }
+    
+    types = c(1:5)
+    types_new = c(1:55)
+    
+    for (v in c(1:5)){
+      types[v] = Game_types[w]
+    }
+    
+    for (v in c(1:55)){
+      types_new[v] = Game_types[w]
+    }
+    
+    
     compare_data <- data.frame(actual = df$value,
                                expected = normalized,
                                game = game_name,
-                               type = Game_types[w]
+                               type = types
     )
+    
+    nom <- sum(vect)
+    
+    for (i in 1:55){
+      vect[i] = vect[i]/nom
+    }
+    
+    augmented_data <- data.frame(age = c(1:55),
+                                 val = vect,
+                                 game = game_name_full,
+                                 type = types_new
+    )
+    
+ 
     # out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed_',games[f],'.csv', sep = '')
     # print(out_path)
     # write.csv(compare_data, out_path)
     position <- w + f
     if (position == 2){
       total <- compare_data
+      augment_total <- augmented_data
     } else{
       total <- rbind(total, compare_data)
+      augment_total <- rbind(augment_total, augmented_data)
     }
     # print(f)
   }
@@ -184,8 +223,15 @@ for (w in 1:num_types){
 
 # Augmented data plot
 
-ggplot() +
-  geom_line(data = expceted_data, aes(x = age, y = val))
+ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
+  geom_line() +
+  geom_area(alpha = 0.1, position = 'dodge') +
+  annotate(geom = "rect", xmin = 10, xmax = 25, ymin = 0, ymax = 0.065,
+           fill = "orange", alpha = 0.2) +
+  facet_grid(cols = vars(type)) + 
+  xlab('Age') +
+  ylab('Frequency') +
+  theme_minimal()
 
 
 # Unaugmented data plot
@@ -201,17 +247,17 @@ compare_data_full <- data.frame(actual = final_actual,
 
 # Model robustness
 
-ggplot(total, aes(x = actual, y = expected*100, fill = fct_inorder(game), color = fct_inorder(game))) +
+ggplot(total, aes(x = actual, y = expected*100, color = fct_inorder(game))) +
   stat_summary(fun.compare_data= mean_cl_normal) + 
   geom_abline(intercept = 0, slope = 1) +
-  geom_point() +
-  geom_smooth(method='lm', linetype=0) +
+  geom_point(aes(size = expected)) +
+  geom_smooth(method='lm', linetype=0, aes(fill = fct_inorder(game))) +
   xlim(0, 60) +
   ylim(0, 60) +
   facet_wrap(vars(type))
 # Model
 
-r2 <- data.frame(x = total$actual, y= total$expected)
+r2 <- data.frame(x = total$actual, y= total$expected*100)
 
 rss <- sum((total$expected- total$actual) ^ 2)  ## residual sum of squares
 tss <- sum((total$actual - mean(total$actual)) ^ 2)  ## total sum of squares
