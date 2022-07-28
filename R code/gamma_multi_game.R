@@ -314,7 +314,7 @@ ggsave(
   F1a_path,
   plot = figure_1_b,
   scale = 1,
-  width = 18,
+  width = 22,
   height = 4,
 )
 

@@ -16,7 +16,7 @@ figure_theme <- theme(
 file_path <- 'D:/Github/KPMG-Contest/Tables/Figure_1.csv'
 df <- read.csv(file_path)
 
-col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Income', 'Percent', 'Users_GZ','TIGZ')
+col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Income', 'Percent', 'Users_GZ','TIGZ','Count')
 colnames(df) <- col_names
 
 percent_population_gen_z <- 0.181218652
@@ -108,3 +108,13 @@ ggsave(
   height = 6,
 )
 
+main4 <- ggplot(data = df) + 
+  geom_bar(aes(x = Count, y = Users_GZ, fill = Operator), stat = 'identity') +
+  scale_fill_nejm() +
+  figure_theme +
+  xlab('Category') +
+  ylab('Generation Z Users') +
+  coord_polar(theta = "y") +
+  figure_theme
+
+main4

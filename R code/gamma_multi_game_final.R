@@ -41,8 +41,8 @@ ARPG_games = c('Genshin_Impact', 'Honkai_Impact', 'Princess_Connect')
 RTS_abb = c('mhszz', 'mblct', 'mbwlb')
 RTS_games = c('Clash_Royale', 'Clash_of_Clans', 'Carrot_Fantasy')
 
-TBRGB_abb = c('myys', 'mmhxy', 'myyzy')
-TBRGB_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Night_of_Full_Moon')
+TBRGB_abb = c('myys', 'mmhxy', 'mlscs')
+TBRGB_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Heartstone')
 
 Game_types = c('MOBA','FPS', 'ARPG', 'RTS', 'TBRGB')
 Game_abb = rbind(MOBA_abb, FPS_abb, ARPG_abb, RTS_abb, TBRGB_abb)
@@ -246,7 +246,7 @@ for (w in 1:num_types){
 
 # Augmented data plot
 
-ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
+augmented <- ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
   geom_line() +
   geom_area(alpha = 0.1, position = 'dodge') +
   annotate(geom = "rect", xmin = 10, xmax = 25, ymin = 0, ymax = 0.065,
@@ -254,8 +254,10 @@ ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fi
   facet_grid(cols = vars(type)) + 
   xlab('Age') +
   ylab('Frequency') +
+  labs(color = 'Game', fill = 'Game') +
   figure_theme
 
+augmented
 
 # Unaugmented data plot
 
@@ -290,3 +292,13 @@ print(rsq)
 ggplot() +
   geom_line(data = normalized_data, aes(x = age, y = val*100)) +
   geom_line(data = raw_data, aes(x = age, y = val, color = 'red'))
+
+
+F1a_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_1augment','.pdf', sep = '')
+ggsave(
+  F1a_path,
+  plot = augmented,
+  scale = 1,
+  width = 20,
+  height = 5,
+)
