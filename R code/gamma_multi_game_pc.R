@@ -19,41 +19,29 @@ figure_theme <- theme(
 )
 
 
-num_games = 3
-num_types = 5
-num_total = num_games * num_types
 
-sup_path = 'D:/Github/KPMG-Contest/Tables/Raw_'
+percentage_gen_z = c(1:15)
+name_genz = c(1:15)
+
+index = 0
+
+num_games = 15
+
+pc_org_file <- read.csv('D:/Github/KPMG-Contest/Tables/Data_PC.csv')
+
+col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Income', 'Percent', 'Users_GZ','TIGZ','Count')
+colnames(pc_org_file) <- col_names
+
+sup_path = 'D:/Github/KPMG-Contest/Tables/Desktop/Usable/Raw_'
 sub_path = '.csv'
 
+Game_abb <- pc_org_file$Abb
+Game_names <- pc_org_file$Game
 
-MOBA_abb = c('wzry', 'mjzpaj', 'mlol')
-MOBA_games = c('Honor_of_Kings', 'Onmyoji_Arena', 'Mobile_League')
-
-
-FPS_abb = c('mcf', 'mpubg', 'mwpzs')
-FPS_games = c('Mobile_Crossfire', 'Mobile_PUBG', 'Ace_Force')
-
-ARPG_abb = c('impact', 'mbh3', 'mmrfz')
-ARPG_games = c('Genshin_Impact', 'Honkai_Impact', 'Arknights')
-
-RTS_abb = c('mhszz', 'mblct', 'mbwlb')
-RTS_games = c('Clash_Royale', 'Clash_of_Clans', 'Carrot_Fantasy')
-
-TBRPG_abb = c('myys', 'mmhxy', 'mlscs')
-TBRPG_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Heartstone')
-
-Game_types = c('MOBA','FPS', 'ARPG', 'RTS', 'TBRPG')
-Game_abb = rbind(MOBA_abb, FPS_abb, ARPG_abb, RTS_abb, TBRPG_abb)
-Game_names = rbind(MOBA_games, rbind(FPS_games, rbind(ARPG_games, rbind(RTS_games, TBRPG_games))))
-
-
-games = c(MOBA_games, ARPG_games)
-
-final_expected = c(1: 5 * num_total)
-final_actual = c(1: 5 * num_total)
-game_name = c(1: 5 * num_total)
-game_name_full = c(1: 60 * num_total)
+final_expected = c(1: 5 * num_games)
+final_actual = c(1: 5 * num_games)
+game_name = c(1: 5 * num_games)
+game_name_full = c(1: 60 * num_games)
 # Raw Data INPUT
 
 # variance_vect = c(0.008, 0.008, 0.008)
@@ -64,25 +52,20 @@ print(Game_abb)
 game_abb <- Game_abb[15]
 print(game_abb)
 
-for (w in 1:num_types){
+for (w in 1:num_games){
+  
+  index = index + 1
   
   # Initialize paths
-  vec_start <- w
-  vec_mid <- w + 5
-  vec_end <- w + 10
-  games <- c(Game_names[vec_start], Game_names[vec_mid], Game_names[vec_end])
-  game_abb <- c(Game_abb[vec_start], Game_abb[vec_mid], Game_abb[vec_end])
+  games <- c(Game_names[w])
+  game_abb <- c(Game_abb[w])
   print(game_abb)
   print(game_name)
-  paths = c(1:3)
-  for (i in 1:num_games){
-    paths[i] = paste(sup_path ,game_abb[i],sub_path, sep = '')
-  }
   
   # Main loop
-  for (f in c(1:num_games)){
+ 
     
-    path <- paths[f]
+    path <- paste(sup_path ,game_abb[1],sub_path, sep = '')
     # read file
     df <- read.csv(path)
     colnames(df) <- c('age', 'value')
@@ -90,8 +73,8 @@ for (w in 1:num_types){
     
     fi = 0
     
-    var_1 = variance_vect[f]
-    var_2 = variance_vect_2[f]
+    var_1 = variance_vect[1]
+    var_2 = variance_vect_2[1]
     
     # mean_age = c(17, 25, 35, 45, 55)
     mean_age = c(14, 21, 31, 42, 60)
@@ -180,32 +163,33 @@ for (w in 1:num_types){
     )
     
     for (v in c(1:5)){
-      final_expected[5 * (f-1) + v] <- normalized[v]
+      final_expected[(w-1) * 5 + v] <- normalized[v]
     }
     
     for (v in c(1:5)){
-      final_actual[5 * (f-1) + v] <- df$value[v]
+      final_actual[(w-1) * 5 +v] <- df$value[v]
     }
     
     for(v in c(1:5)){
-      game_name[5 * (f-1) + v] <- games[f]
+      game_name[(w-1) * 5 + v] <- games[1]
     }
     
     game_name_full = c(1:55)
     for(v in c(1:55)){
-      game_name_full[v] <- games[f]
+      game_name_full[v] <- games[1]
     }
     
     types = c(1:5)
     types_new = c(1:55)
     
     for (v in c(1:5)){
-      types[v] = Game_types[w]
+      types[v] = pc_org_file$Category[w]
     }
     
     for (v in c(1:55)){
-      types_new[v] = Game_types[w]
+      types_new[v] = pc_org_file$Category[w]
     }
+    
     
     
     compare_data <- data.frame(actual = df$value,
@@ -226,20 +210,28 @@ for (w in 1:num_types){
                                  type = types_new
     )
     
+    gz <- 0
+    
+    for (i in 12:27){
+      gz = gz + vect[i]  
+    }
+    print(index)
+    name_genz[index] <- games[1]
+    percentage_gen_z[index] <- gz
+    
     
     # out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed_',games[f],'.csv', sep = '')
     # print(out_path)
     # write.csv(compare_data, out_path)
-    position <- w + f
-    if (position == 2){
+    position <- w
+    if (position == 1){
       total <- compare_data
       augment_total <- augmented_data
     } else{
       total <- rbind(total, compare_data)
       augment_total <- rbind(augment_total, augmented_data)
     }
-    # print(f)
-  }
+  
 }
 
 
@@ -248,7 +240,7 @@ for (w in 1:num_types){
 augmented <- ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
   geom_line() +
   geom_area(alpha = 0.1, position = 'dodge') +
-  annotate(geom = "rect", xmin = 10, xmax = 25, ymin = 0, ymax = 0.065,
+  annotate(geom = "rect", xmin = 10, xmax = 27, ymin = 0, ymax = 0.065,
            fill = "orange", alpha = 0.2) +
   facet_grid(cols = vars(fct_inorder(type))) + 
   xlab('Age') +
@@ -275,10 +267,11 @@ ggplot(total, aes(x = actual, y = expected*100, color = fct_inorder(game))) +
   stat_summary(fun.compare_data= mean_cl_normal) + 
   geom_abline(intercept = 0, slope = 1) +
   geom_point(aes(size = expected)) +
-  geom_smooth(method='lm', linetype=0, aes(fill = fct_inorder(game))) +
+  geom_smooth(method='lm', linetype=0, aes(fill = fct_inorder(game)), alpha = 0.5) +
   xlim(0, 60) +
   ylim(0, 60) +
   facet_wrap(vars(type))
+
 # Model
 
 r2 <- data.frame(x = total$actual, y= total$expected*100)
@@ -293,7 +286,7 @@ ggplot() +
   geom_line(data = raw_data, aes(x = age, y = val, color = 'red'))
 
 
-F1a_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_1augment','.pdf', sep = '')
+F1a_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_2augment','.pdf', sep = '')
 ggsave(
   F1a_path,
   plot = augmented,
@@ -301,3 +294,7 @@ ggsave(
   width = 20,
   height = 5,
 )
+
+
+out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed_data_2','.csv', sep = '')
+write.csv(data.frame(game = name_genz, percentage_gen_z), out_path)

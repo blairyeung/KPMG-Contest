@@ -1,16 +1,16 @@
-﻿Game Name,Abbreviation,Category,Game Operator,Active player,Income (app store)  (Million dollars),Percentage player that are GZ,Number_GZ player,TIGZ,Count,,,,
-Honor of Kings,wzry,MOBA,Tencent,6.7,248.1,0.414174976,2.79,2.3,5,0.498314041,1.155548183,,
-Mobile League of legends,mlol,MOBA,Tencent,1.1,57.3,0.510556373,0.57,2.84,5,,0.291017133,,0.432976012
-Onimoji Arena,mjzpaj,MOBA,NetEase,0.1,0.5,0.570210772,0.06,3.16,5,,0.034212646,,
-Genshin_Impact,impact,RPG,MiHoYo,2,102.1,0.637098591,1.28,3.53,2,0.456410249,0.815486196,,
-Honkai_Impact_3,mbh3,RPG,MiHoYo,0.09,4,0.303231158,0.03,1.68,2,,0.009096935,,0.579891126
-Arknights,mmrfz,RPG,NetEase,0.1,5.6,0.428900997,0.43,2.37,2,,0.184427429,,
-Mobile_Crossfire,mcf,FPS,Tencent,0.43,26.2,0.449608347,0.19,2.5,4,0.527423262,0.085425586,,
-Mobile_PUBG,mpubg,FPS,Tencent,3.5,167.5,0.567050052,2,3.15,4,,1.134100105,,0.556979294
-Ace_Force,mwpzs,FPS,Tencent,0.044,0.27,0.565611385,0.03,3.39,4,,0.016968342,,
-Clash_Royale,mhszz,RTS,Supercell,1.7,11.9,0.393506537,0.68,2.19,3,0.469087085,0.267584445,,
-Clash_of_Clans,mblct,RTS,Supercell,1.8,14.5,0.488306945,0.89,2.72,3,,0.434593181,,0.462486041
-Carrot_Fantasy_3,mbwlb,RTS,Feiyu,0.72,0.069,0.525447774,0.38,2.92,3,,0.199670154,,
-Onmyoji,myys,TBRPG,NetEase,0.082,11.9,0.578577886,0.05,3.21,1,0.574785585,0.028928894,,
-Fantasy_Westward_Journey,mmhxy,TBRPG,NetEase,0.119,116.7,0.522919238,0.06,2.9,1,,0.031375154,,0.571543938
-Hearthstone,mlscs,TBRPG,Blizard,0.078,3.6,0.622859632,0.05,3.61,1,,0.031142982,,
+﻿Game Name,Abbreviation,Category,Game Operator,Active player,Income (app store)  (Million dollars),Percentage player that are GZ,Number_GZ player,TGIZ,Count
+Honor of Kings,wzry,MOBA,Tencent,6.7,248.1,0.491286682,3.29,2.71,5
+Mobile League of legends,mlol,MOBA,Tencent,1.1,57.3,0.577038594,0.63,3.18,5
+Onimoji Arena,mjzpaj,MOBA,NetEase,0.1,0.5,0.651001559,0.07,3.59,5
+Genshin_Impact,impact,RPG,MiHoYo,2,102.1,0.71776152,1.44,3.96,2
+Honkai_Impact_3,mbh3,RPG,MiHoYo,0.09,4,0.380868372,0.03,2.1,2
+Arknights,mmrfz,RPG,NetEase,0.1,5.6,0.495120245,0.05,2.73,2
+Mobile_Crossfire,mcf,FPS,Tencent,0.43,26.2,0.519393506,0.22,2.87,4
+Mobile_PUBG,mpubg,FPS,Tencent,3.5,167.5,0.634966507,2.22,3.5,4
+Ace_Force,mwpzs,FPS,Tencent,0.044,0.27,0.627455139,0.03,3.46,4
+Clash_Royale,mhszz,RTS,Supercell,1.7,11.9,0.454065721,0.77,2.51,3
+Clash_of_Clans,mblct,RTS,Supercell,1.8,14.5,0.556835255,1,3.07,3
+Carrot_Fantasy_3,mbwlb,RTS,Feiyu,0.72,0.069,0.599699625,0.43,3.31,3
+Onmyoji,myys,TBRPG,NetEase,0.082,11.9,0.655615551,0.05,3.62,1
+Fantasy_Westward_Journey,mmhxy,TBRPG,NetEase,0.119,116.7,0.617480493,0.07,3.41,1
+Hearthstone,mlscs,TBRPG,Blizard,0.078,3.6,0.704625947,0.05,3.89,1

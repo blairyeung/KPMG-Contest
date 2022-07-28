@@ -13,10 +13,14 @@ figure_theme <- theme(
   )
 
 
-file_path <- 'D:/Github/KPMG-Contest/Tables/Figure_1.csv'
+setwd('D:/Github/KPMG-Contest')
+
+cur_path <- getwd()
+
+file_path <- 'D:/Github/KPMG-Contest/Tables/Figure_2.csv'
 df <- read.csv(file_path)
 
-col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Income', 'Percent', 'Users_GZ','TGIZ','Count')
+col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Percent', 'Users_GZ','TGIZ')
 colnames(df) <- col_names
 
 percent_population_gen_z <- 0.181218652
@@ -50,10 +54,11 @@ main <- ggplot(data = df) +
 main
 
 main2 <- ggplot(data = df) +
-  geom_jitter(aes(x = Users, y = Income, size = Users_GZ, color = fct_inorder(Category), alpha = TGIZ / 4)) +
-  geom_text_repel(aes(x = Users, y = Income, label = Game), hjust=2, vjust=1) +
-  scale_y_continuous(trans = 'log10', limits = c(0.01, 2000), breaks = c(0.01,0.1,1,10,100,1000), labels = function(x) format(x, scientific = FALSE)) +
-  scale_x_continuous(trans = 'log10', limits = c(0.01, 20)) +
+  geom_abline(intercept = 0, slope = 1, color = '#2A2A2A') +
+  geom_jitter(aes(x = Users, y = Users_GZ, size = Users_GZ, color = fct_inorder(Category), alpha = TGIZ / 4)) +
+  geom_text_repel(aes(x = Users, y = Users_GZ, label = Game), hjust=2, vjust=1) +
+  scale_x_continuous(trans = 'log10', limits = c(30, 600)) +
+  scale_y_continuous(trans = 'log10', limits = c(30, 1000)) +
   scale_alpha_continuous(limits = c(0.4,1)) +
   scale_color_nejm() +
   scale_size(
@@ -67,10 +72,9 @@ main2 <- ggplot(data = df) +
   ) + 
   guides(fill = guide_legend(override.aes = list(color = NA)), 
          size = FALSE) +
-  xlab('Monthly downloads (million)') +
-  ylab('Monthly income (million dollars)') +
-  labs(color = "Category", alpha = "TGIZ") +
-  figure_theme
+  xlab('Daily active players') +
+  ylab('Daily active GENZ players') +
+  labs(color = "Category", alpha = "TGIZ")
 
 main2
 
@@ -98,7 +102,7 @@ main3 <- ggplot(data = df) +
 main3
 
 
-F1b_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_1b_3','.pdf', sep = '')
+F1b_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_2b_3','.pdf', sep = '')
 ggsave(
   F1b_path,
   plot = main2,
@@ -112,16 +116,14 @@ order <- c("MOBA", "FPS", "RTS","RPG","TBRPG")
 order <-  c("TBRPG", "RPG", "RTS","FPS", "MOBA")
 
 main4 <- ggplot(data = df) + 
-  geom_bar(aes(x = Count, y = Users_GZ, fill = Operator), stat = 'identity') +
-  scale_fill_nejm() +
+  geom_bar(aes(x = Category, y = Users_GZ, fill = Operator), stat = 'identity') +
   xlab('Category') +
-  ylab('Generation Z Users (million)') +
-  scale_x_discrete(limit = order) +
- figure_theme
+  ylab('Generation Z Users (million)') + figure_theme
+
 
 main4
 
-F1c_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_1b_4','.pdf', sep = '')
+F1c_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_2b_4','.pdf', sep = '')
 ggsave(
   F1c_path,
   plot = main4,

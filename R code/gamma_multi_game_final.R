@@ -43,7 +43,7 @@ RTS_games = c('Clash_Royale', 'Clash_of_Clans', 'Carrot_Fantasy')
 TBRPG_abb = c('myys', 'mmhxy', 'mlscs')
 TBRPG_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Heartstone')
 
-Game_types = c('MOBA','FPS', 'ARPG', 'RTS', 'TBRPG')
+Game_types = c('MOBA','FPS', 'RPG', 'RTS', 'TBRPG')
 Game_abb = rbind(MOBA_abb, FPS_abb, ARPG_abb, RTS_abb, TBRPG_abb)
 Game_names = rbind(MOBA_games, rbind(FPS_games, rbind(ARPG_games, rbind(RTS_games, TBRPG_games))))
 
@@ -249,7 +249,7 @@ for (w in 1:num_types){
     
     gz <- 0
     
-    for (i in 12:25){
+    for (i in 12:27){
       gz = gz + vect[i]  
     }
     print(index)
@@ -264,9 +264,9 @@ for (w in 1:num_types){
 augmented <- ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
   geom_line() +
   geom_area(alpha = 0.1, position = 'dodge') +
-  annotate(geom = "rect", xmin = 10, xmax = 25, ymin = 0, ymax = 0.065,
+  annotate(geom = "rect", xmin = 12, xmax = 27, ymin = 0, ymax = 0.065,
            fill = "orange", alpha = 0.2) +
-  facet_grid(cols = vars(type)) + 
+  facet_grid(cols = vars(fct_inorder(type))) + 
   xlab('Age') +
   ylab('Frequency') +
   labs(color = 'Game', fill = 'Game') +
