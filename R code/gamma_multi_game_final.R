@@ -34,20 +34,24 @@ MOBA_games = c('Honor_of_Kings', 'Onmyoji_Arena', 'Mobile_League')
 FPS_abb = c('mcf', 'mpubg', 'mwpzs')
 FPS_games = c('Mobile_Crossfire', 'Mobile_PUBG', 'Ace_Force')
 
-ARPG_abb = c('impact', 'mbh3', 'mgzlj')
-ARPG_games = c('Genshin_Impact', 'Honkai_Impact', 'Princess_Connect')
-# R^2 game
+ARPG_abb = c('impact', 'mbh3', 'mmrfz')
+ARPG_games = c('Genshin_Impact', 'Honkai_Impact', 'Arknights')
 
 RTS_abb = c('mhszz', 'mblct', 'mbwlb')
 RTS_games = c('Clash_Royale', 'Clash_of_Clans', 'Carrot_Fantasy')
 
-TBRGB_abb = c('myys', 'mmhxy', 'mlscs')
-TBRGB_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Heartstone')
+TBRPG_abb = c('myys', 'mmhxy', 'mlscs')
+TBRPG_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Heartstone')
 
-Game_types = c('MOBA','FPS', 'ARPG', 'RTS', 'TBRGB')
-Game_abb = rbind(MOBA_abb, FPS_abb, ARPG_abb, RTS_abb, TBRGB_abb)
-Game_names = rbind(MOBA_games, rbind(FPS_games, rbind(ARPG_games, rbind(RTS_games, TBRGB_games))))
+Game_types = c('MOBA','FPS', 'ARPG', 'RTS', 'TBRPG')
+Game_abb = rbind(MOBA_abb, FPS_abb, ARPG_abb, RTS_abb, TBRPG_abb)
+Game_names = rbind(MOBA_games, rbind(FPS_games, rbind(ARPG_games, rbind(RTS_games, TBRPG_games))))
 
+
+percentage_gen_z = c(1:15)
+name_genz = c(1:15)
+
+index = 0
 
 games = c(MOBA_games, ARPG_games)
 
@@ -83,6 +87,8 @@ for (w in 1:num_types){
   # Main loop
   for (f in c(1:num_games)){
     
+    index <- index +1
+    
     path <- paths[f]
     # read file
     df <- read.csv(path)
@@ -95,7 +101,7 @@ for (w in 1:num_types){
     var_2 = variance_vect_2[f]
     
     # mean_age = c(17, 25, 35, 45, 55)
-    mean_age = c(18, 21, 31, 42, 60)
+    mean_age = c(17, 21, 31, 42, 60)
     const = 500
     
     sqrtpi = sqrt(2 * 3.14159)
@@ -240,6 +246,15 @@ for (w in 1:num_types){
       augment_total <- rbind(augment_total, augmented_data)
     }
     # print(f)
+    
+    gz <- 0
+    
+    for (i in 12:25){
+      gz = gz + vect[i]  
+    }
+    print(index)
+    name_genz[index] <- games[f]
+    percentage_gen_z[index] <- gz
   }
 }
 
@@ -302,3 +317,7 @@ ggsave(
   width = 20,
   height = 5,
 )
+
+out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed_data','.csv', sep = '')
+write.csv(data.frame(game = name_genz, percentage_gen_z), out_path)
+

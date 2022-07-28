@@ -9,7 +9,7 @@ figure_theme <- theme(
   axis.text.x = element_text(size = 12),
   axis.text.y = element_text(size = 12),
   legend.title = element_text(size = 14),
-  legend.text = element_text(size = 12),
+  legend.text = element_text(size = 12)
   )
 
 
@@ -75,7 +75,6 @@ main2 <- ggplot(data = df) +
 main2
 
 
-
 main3 <- ggplot(data = df) +
   geom_point(aes(x = Users, y = Income, size = Users_GZ, color = Category, alpha = 0.7)) +
   geom_text_repel(aes(x = Users, y = Income, label = Game), hjust=2, vjust=1) +
@@ -108,13 +107,25 @@ ggsave(
   height = 6,
 )
 
+order <- c("MOBA", "FPS", "RTS","RPG","TBRPG")
+
+order <-  c("TBRPG", "RPG", "RTS","FPS", "MOBA")
+
 main4 <- ggplot(data = df) + 
   geom_bar(aes(x = Count, y = Users_GZ, fill = Operator), stat = 'identity') +
   scale_fill_nejm() +
-  figure_theme +
   xlab('Category') +
-  ylab('Generation Z Users') +
-  coord_polar(theta = "y") +
-  figure_theme
+  ylab('Generation Z Users (million)') +
+  scale_x_discrete(limit = order) +
+ figure_theme
 
 main4
+
+F1c_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_1b_4','.pdf', sep = '')
+ggsave(
+  F1c_path,
+  plot = main4,
+  scale = 1,
+  width = 8,
+  height = 6,
+)
