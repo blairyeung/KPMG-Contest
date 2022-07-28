@@ -3,6 +3,7 @@ library(ggrepel)
 library(tidyverse)
 library(ggsci)
 
+
 figure_theme <- theme(
   axis.title.x = element_text(size = 16),
   axis.title.y = element_text(size = 16),
@@ -10,6 +11,11 @@ figure_theme <- theme(
   axis.text.y = element_text(size = 12),
   legend.title = element_text(size = 14),
   legend.text = element_text(size = 12),
+  panel.background = element_blank(),
+  strip.background = element_blank(),
+  strip.text = element_text(size = 16),
+  axis.line.x.bottom=element_line(color="grey"),
+  axis.line.y.left=element_line(color="grey")
 )
 
 
@@ -35,15 +41,12 @@ ARPG_games = c('Genshin_Impact', 'Honkai_Impact', 'Princess_Connect')
 RTS_abb = c('mhszz', 'mblct', 'mbwlb')
 RTS_games = c('Clash_Royale', 'Clash_of_Clans', 'Carrot_Fantasy')
 
-TBRGB_abb = c('myys', 'mmhxy', 'mlscs')
-TBRGB_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Heartstone')
+TBRGB_abb = c('myys', 'mmhxy', 'myyzy')
+TBRGB_games = c('Onmyoji', 'Fantasy_Westward_Journey', 'Night_of_Full_Moon')
 
 Game_types = c('MOBA','FPS', 'ARPG', 'RTS', 'TBRGB')
 Game_abb = rbind(MOBA_abb, FPS_abb, ARPG_abb, RTS_abb, TBRGB_abb)
 Game_names = rbind(MOBA_games, rbind(FPS_games, rbind(ARPG_games, rbind(RTS_games, TBRGB_games))))
-
-percentage_gen_z = c(1:15)
-name_genz = c(1:15)
 
 
 games = c(MOBA_games, ARPG_games)
@@ -55,17 +58,14 @@ game_name_full = c(1: 60 * num_total)
 # Raw Data INPUT
 
 # variance_vect = c(0.008, 0.008, 0.008)
-variance_vect = c(0.001, 0.001, 0.001)
-variance_vect_2 = c(0.5,0.5,0.5)
+variance_vect = c(0.01, 0.01, 0.01)
+variance_vect_2 = c(0.8,0.8,0.8)
 
 print(Game_abb)
 game_abb <- Game_abb[15]
 print(game_abb)
 
-index = 0
-
 for (w in 1:num_types){
-  
   
   # Initialize paths
   vec_start <- w
@@ -74,7 +74,7 @@ for (w in 1:num_types){
   games <- c(Game_names[vec_start], Game_names[vec_mid], Game_names[vec_end])
   game_abb <- c(Game_abb[vec_start], Game_abb[vec_mid], Game_abb[vec_end])
   print(game_abb)
-  print(games)
+  print(game_name)
   paths = c(1:3)
   for (i in 1:num_games){
     paths[i] = paste(sup_path ,game_abb[i],sub_path, sep = '')
@@ -82,8 +82,6 @@ for (w in 1:num_types){
   
   # Main loop
   for (f in c(1:num_games)){
-    
-    index = index + 1
     
     path <- paths[f]
     # read file
@@ -132,6 +130,13 @@ for (w in 1:num_types){
       vect[i] = fi
       # print(fi)
     }
+    
+    for (i in 1:55){
+      if (vect[i] < 0){
+        vect[i] = 0
+      }
+    }
+    
     
     expceted_data <- data.frame(age = c(1:55),
                                 val = vect
@@ -210,12 +215,6 @@ for (w in 1:num_types){
                                type = types
     )
     
-    for (i in 1:55){
-      if (vect[i] < 0){
-        vect[i] = 0
-      }
-    }
-    
     nom <- sum(vect)
     
     for (i in 1:55){
@@ -228,7 +227,7 @@ for (w in 1:num_types){
                                  type = types_new
     )
     
- 
+    
     # out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed_',games[f],'.csv', sep = '')
     # print(out_path)
     # write.csv(compare_data, out_path)
@@ -240,32 +239,23 @@ for (w in 1:num_types){
       total <- rbind(total, compare_data)
       augment_total <- rbind(augment_total, augmented_data)
     }
-    
-    gz <- 0
-    
-    for (i in 12:25){
-      gz = gz + vect[i]  
-    }
-    print(index)
-    name_genz[index] <- games[f]
-    percentage_gen_z[index] <- gz
+    # print(f)
   }
 }
 
 
 # Augmented data plot
 
-figure_1_b <- ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
+ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
   geom_line() +
   geom_area(alpha = 0.1, position = 'dodge') +
   annotate(geom = "rect", xmin = 10, xmax = 25, ymin = 0, ymax = 0.065,
            fill = "orange", alpha = 0.2) +
-  facet_grid(cols = vars(fct_inorder(type))) + 
+  facet_grid(cols = vars(type)) + 
   xlab('Age') +
   ylab('Frequency') +
   figure_theme
 
-figure_1_b
 
 # Unaugmented data plot
 
@@ -274,20 +264,20 @@ ggplot() +
   geom_line(data = raw_data, aes(x = age, y = val, color = 'red'))
 
 compare_data_full <- data.frame(actual = final_actual,
-                              expected = normalized,
-                           game = game_name
+                                expected = normalized,
+                                game = game_name
 )
 
 # Model robustness
 
-figure_s_1 <- ggplot(total, aes(x = actual, y = expected*100, color = fct_inorder(game))) +
+ggplot(total, aes(x = actual, y = expected*100, color = fct_inorder(game))) +
   stat_summary(fun.compare_data= mean_cl_normal) + 
   geom_abline(intercept = 0, slope = 1) +
   geom_point(aes(size = expected)) +
   geom_smooth(method='lm', linetype=0, aes(fill = fct_inorder(game))) +
   xlim(0, 60) +
   ylim(0, 60) +
-  facet_wrap(vars(fct_inorder(type)))
+  facet_wrap(vars(type))
 # Model
 
 r2 <- data.frame(x = total$actual, y= total$expected*100)
@@ -300,32 +290,3 @@ print(rsq)
 ggplot() +
   geom_line(data = normalized_data, aes(x = age, y = val*100)) +
   geom_line(data = raw_data, aes(x = age, y = val, color = 'red'))
-
-# Output the file 
-
-out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed','.csv', sep = '')
-print 
-write.csv(data.frame(game = name_genz, percentage_gen_z), out_path)
-
-
-
-F1a_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_1a','.svg', sep = '')
-ggsave(
-  F1a_path,
-  plot = figure_1_b,
-  scale = 1,
-  width = 18,
-  height = 4,
-)
-
-Fs1_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_s1','.svg', sep = '')
-ggsave(
-  Fs1_path,
-  plot = figure_s_1,
-  scale = 1,
-  width = 10,
-  height = 6,
-)
-
-
-
