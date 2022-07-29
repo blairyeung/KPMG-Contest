@@ -20,7 +20,7 @@ cur_path <- getwd()
 file_path <- 'D:/Github/KPMG-Contest/Tables/Figure_2.csv'
 df <- read.csv(file_path)
 
-col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Percent', 'Users_GZ','TGIZ')
+col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Percent', 'Users_GZ','TGIZ','Genre_MAU', 'Genre TGIZ')
 colnames(df) <- col_names
 
 percent_population_gen_z <- 0.181218652
@@ -56,9 +56,9 @@ main
 main2 <- ggplot(data = df) +
   geom_abline(intercept = 0, slope = 1, color = '#2A2A2A') +
   geom_jitter(aes(x = Users, y = Users_GZ, size = Users_GZ, color = fct_inorder(Category), alpha = TGIZ / 4)) +
-  geom_text_repel(aes(x = Users, y = Users_GZ, label = Game), hjust=2, vjust=1) +
-  scale_x_continuous(trans = 'log10', limits = c(30, 600)) +
-  scale_y_continuous(trans = 'log10', limits = c(30, 1000)) +
+  geom_text_repel(aes(x = Users, y = Users_GZ, label = Game), hjust=0.5, vjust=0.5) +
+  scale_x_continuous(trans = 'log10', limits = c(0.2, 20)) +
+  scale_y_continuous(trans = 'log10', limits = c(0.2, 20)) +
   scale_alpha_continuous(limits = c(0.4,1)) +
   scale_color_nejm() +
   scale_size(
@@ -72,8 +72,8 @@ main2 <- ggplot(data = df) +
   ) + 
   guides(fill = guide_legend(override.aes = list(color = NA)), 
          size = FALSE) +
-  xlab('Daily active players') +
-  ylab('Daily active GENZ players') +
+  xlab('MAU') +
+  ylab('MAUZ') +
   labs(color = "Category", alpha = "TGIZ")
 
 main2
@@ -116,10 +116,10 @@ order <- c("MOBA", "FPS", "RTS","RPG","TBRPG")
 order <-  c("TBRPG", "RPG", "RTS","FPS", "MOBA")
 
 main4 <- ggplot(data = df) + 
-  geom_bar(aes(x = Category, y = Users_GZ, fill = Operator), stat = 'identity') +
-  xlab('Category') +
-  ylab('Generation Z Users (million)') + figure_theme
-
+  geom_bar(aes(x = Category, y = Users_GZ, fill = Category), stat = 'identity', alpha = 0.8) +
+  scale_fill_nejm() +
+  xlab('Genre') +
+  ylab('MAUZ') + figure_theme
 
 main4
 
@@ -131,3 +131,39 @@ ggsave(
   width = 8,
   height = 6,
 )
+
+main5 <- ggplot() + 
+  geom_point(data = subset(df, Category  %in% c("MOBA")), aes(x = fct_inorder(Category), y = TGIZ, alpha = Genre_MAU),color = '#d48f28', size = 15, shape = 'square') +
+  geom_violin(data = df, aes(x = fct_inorder(Category), y = TGIZ, fill =  Genre_MAU, alpha = Genre_MAU)) +
+  geom_boxplot(data = df, aes(x = fct_inorder(Category), y = TGIZ,fill = Genre_MAU, alpha = Genre_MAU), width = 0.5) +
+  scale_size(
+    name = waiver(),
+    breaks = waiver(),
+    labels = waiver(),
+    limits = NULL,
+    range = c(10, 30),
+    trans = "identity",
+    guide = "legend"
+  ) +
+  scale_alpha(range = c(0.5,0.9)) +
+  scale_fill_gradient(limits = c(0, 15), low = '#e0c000',high = '#b30838') +
+  xlab('Genre') +
+  ylab('TGIZ')+
+  figure_theme +
+  guides(fill = guide_legend(override.aes = list(color = NA)), 
+         alpha = FALSE, 
+         size = FALSE)  +
+  labs(fill = 'Genre MAUZ')
+#  scale_x_discrete(limit = order)
+
+main5
+
+F1c_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_2b_5','.pdf', sep = '')
+ggsave(
+  F1c_path,
+  plot = main5,
+  scale = 1,
+  width = 8,
+  height = 6,
+)
+

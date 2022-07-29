@@ -259,6 +259,10 @@ for (w in 1:num_types){
 }
 
 
+out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed_',total,'.csv', sep = '')
+print(out_path)
+write.csv(compare_data, out_path)
+
 # Augmented data plot
 
 augmented <- ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
