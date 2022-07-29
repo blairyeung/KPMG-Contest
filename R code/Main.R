@@ -4,14 +4,14 @@ library(tidyverse)
 library(ggsci)
 
 figure_theme <- theme(
-  axis.title.x = element_text(size = 16),
-  axis.title.y = element_text(size = 16),
-  axis.text.x = element_text(size = 12),
-  axis.text.y = element_text(size = 12),
-  legend.title = element_text(size = 14),
-  legend.text = element_text(size = 12)
-  )
-
+  axis.title.x = element_text(size = 24),
+  axis.title.y = element_text(size = 24),
+  axis.text.x = element_text(size = 16),
+  axis.text.y = element_text(size = 16),
+  legend.title = element_text(size = 20),
+  legend.text = element_text(size = 16),
+  strip.text = element_text(size = 16),
+)
 
 file_path <- 'D:/Github/KPMG-Contest/Tables/Figure_1.csv'
 df <- read.csv(file_path)
@@ -109,7 +109,7 @@ ggsave(
   plot = main2,
   scale = 1,
   width = 12,
-  height = 6,
+  height = 8,
 )
 
 order <- c("MOBA", "FPS", "RTS","RPG","TBRPG")
@@ -159,7 +159,7 @@ ggsave(
   plot = main5,
   scale = 1,
   width = 8,
-  height = 6,
+  height = 8,
 )
 
 F1c_path <- paste('D:/Github/KPMG-Contest/Figures/','Figure_1b_4','.pdf', sep = '')
@@ -168,5 +168,6 @@ ggsave(
   plot = main4,
   scale = 1,
   width = 8,
-  height = 6,
+  height = 8,
 )
+

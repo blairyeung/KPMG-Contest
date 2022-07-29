@@ -5,12 +5,12 @@ library(ggsci)
 
 
 figure_theme <- theme(
-  axis.title.x = element_text(size = 16),
-  axis.title.y = element_text(size = 16),
-  axis.text.x = element_text(size = 12),
-  axis.text.y = element_text(size = 12),
-  legend.title = element_text(size = 14),
-  legend.text = element_text(size = 12),
+  axis.title.x = element_text(size = 24),
+  axis.title.y = element_text(size = 24),
+  axis.text.x = element_text(size = 16),
+  axis.text.y = element_text(size = 16),
+  legend.title = element_text(size = 20),
+  legend.text = element_text(size = 16),
   panel.background = element_blank(),
   strip.background = element_blank(),
   strip.text = element_text(size = 16),
@@ -291,7 +291,7 @@ ggsave(
   F1a_path,
   plot = augmented,
   scale = 1,
-  width = 20,
+  width = 22,
   height = 5,
 )
 

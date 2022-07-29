@@ -26,6 +26,10 @@ num_total = num_games * num_types
 sup_path = 'D:/Github/KPMG-Contest/Tables/Raw_'
 sub_path = '.csv'
 
+mb_org_file <- read.csv('D:/Github/KPMG-Contest/Tables/Figure_1.csv')
+
+col_names <- c('Game','Abb','Category', 'Operator', 'Users', 'Percent', 'Users_GZ','TGIZ','Genre_MAU', 'Genre TGIZ')
+colnames(mb_org_file) <- col_names
 
 MOBA_abb = c('wzry', 'mjzpaj', 'mlol')
 MOBA_games = c('Honor_of_Kings', 'Onmyoji_Arena', 'Mobile_League')
@@ -59,6 +63,7 @@ final_expected = c(1: 5 * num_total)
 final_actual = c(1: 5 * num_total)
 game_name = c(1: 5 * num_total)
 game_name_full = c(1: 60 * num_total)
+game_player_full = c(1: 60 * num_total)
 # Raw Data INPUT
 
 # variance_vect = c(0.008, 0.008, 0.008)
@@ -199,8 +204,10 @@ for (w in 1:num_types){
     }
     
     game_name_full = c(1:55)
+    game_player_full = c(1:55)
     for(v in c(1:55)){
       game_name_full[v] <- games[f]
+      game_player_full[v] <- mb_org_file$Users[index]
     }
     
     types = c(1:5)
@@ -230,7 +237,8 @@ for (w in 1:num_types){
     augmented_data <- data.frame(age = c(1:55),
                                  val = vect,
                                  game = game_name_full,
-                                 type = types_new
+                                 type = types_new,
+                                 players = game_player_full
     )
     
     
@@ -263,6 +271,12 @@ out_path <- paste('D:/Github/KPMG-Contest/Tables/','Processed_',total,'.csv', se
 print(out_path)
 write.csv(compare_data, out_path)
 
+
+out_path2 <- paste('D:/Github/KPMG-Contest/Tables/','Subtotal','.csv', sep = '')
+print(out_path)
+write.csv(augment_total, out_path2)
+
+
 # Augmented data plot
 
 augmented <- ggplot(data = augment_total, aes(x = age, y = val, color = fct_inorder(game), fill = fct_inorder(game))) +
@@ -277,6 +291,21 @@ augmented <- ggplot(data = augment_total, aes(x = age, y = val, color = fct_inor
   figure_theme
 
 augmented
+
+augmented_unnorm <- ggplot() +
+  geom_area(data = subset(augment_total, type == 'MOBA'), aes(x = age, y = val * players, alpha = 0.2, fill = 'red'), position = 'stack') +
+  geom_area(data = subset(augment_total, type == 'FPS'), aes(x = age, y = val * players,  fill = fct_inorder(game)), alpha = 0.2, position = 'stack') +
+  geom_area(data = subset(augment_total, type == 'RPG'), aes(x = age, y = val * players, fill = fct_inorder(game)), alpha = 0.2, position = 'stack') +
+  geom_area(data = subset(augment_total, type == 'RTS'), aes(x = age, y = val * players, , fill = fct_inorder(game)), alpha = 0.2, position = 'stack') +
+  geom_area(data = subset(augment_total, type == 'TBRPG'), aes(x = age, y = val * players,  fill = fct_inorder(game)), alpha = 0.2, position = 'stack') +
+  annotate(geom = "rect", xmin = 12, xmax = 27, ymin = 0, ymax = 0.35,
+           fill = "orange", alpha = 0.2) +
+  xlab('Age') +
+  ylab('Frequency') +
+  labs(color = 'Game', fill = 'Game') +
+  figure_theme
+
+augmented_unnorm
 
 # Unaugmented data plot
 
@@ -318,7 +347,7 @@ ggsave(
   F1a_path,
   plot = augmented,
   scale = 1,
-  width = 20,
+  width = 22,
   height = 5,
 )
 
